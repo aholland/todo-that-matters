@@ -1,0 +1,27 @@
+/* Default (Dark) Theme */
+:root {
+    --background: #1a1a1a; /* Dark grey background */
+    --container-bg: #2d2d2d; /* Darker grey container */
+    --item-bg: #3b3b3b; /* Slightly lighter grey for items */
+    --text-primary: #f5f5f5; /* White primary text */
+    --text-secondary: #a0a0a0; /* Light grey secondary text */
+    --border: #555555; /* Medium grey border */
+    --button-bg: #4b4b4b; /* Dark grey button */
+    --button-bg-hover: #666666; /* Lighter grey on hover */
+    --button-bg-disabled: #3b3b3b; /* Dark grey when disabled */
+    --accent: #888888; /* Grey accent for checkboxes */
+}
+
+/* Fruity Theme (Playful) */
+:root.fruity-theme {
+    --background: #ffeb99; /* Bright mango yellow background */
+    --container-bg: #f0f4c3; /* Light lime container */
+    --item-bg: #b2ebf2; /* Playful cyan for items */
+    --text-primary: #d32f2f; /* Bold cherry red primary text */
+    --text-secondary: #7b1fa2; /* Deep grape purple secondary text */
+    --border: #ff6d00; /* Zesty orange border */
+    --button-bg: #76ff03; /* Vibrant lime green button */
+    --button-bg-hover: #9cff57; /* Brighter lime on hover */
+    --button-bg-disabled: #ccff90; /* Pale lime when disabled */
+    --accent: #ff4081; /* Berry pink accent for checkboxes */
+}

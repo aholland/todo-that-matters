@@ -2,16 +2,28 @@
   import {secondsSinceEpoch} from '$lib/stores/clock';
   import {get} from 'svelte/store';
   import {Todo} from '$lib/todo';
+  import '../lib/styles/themes.css';
 
   let todos = $state<Todo[]>([]);
   let newTodo = $state('');
   let newDeadlineInput = $state(0);
   let isManualDeadline = $state(false);
+  let isFruityTheme = $state(false); /* Theme toggle state */
 
   let startSeconds = get(secondsSinceEpoch);
   let now = $derived($secondsSinceEpoch - startSeconds);
   let defaultDeadline = $derived((Math.round((now-3) / 10) * 10)+10);
   let newDeadline = $derived(isManualDeadline ? newDeadlineInput : defaultDeadline);
+
+  /* Update html class when theme changes */
+  $effect(() => {
+    console.log('Toggling theme to:', isFruityTheme ? 'fruity' : 'dark');
+    if (isFruityTheme) {
+      document.documentElement.classList.add('fruity-theme');
+    } else {
+      document.documentElement.classList.remove('fruity-theme');
+    }
+  });
 
   function addTodo(event: Event) {
     event.preventDefault();
@@ -64,61 +76,72 @@
 
 <style>
     :global(html), :global(body) {
-        background-color: #1a1a1a; /* Dark grey background */
+        background-color: var(--background);
         margin: 0;
         padding: 0;
         height: 100%;
     }
 </style>
 
-<div class="max-w-md mx-auto mt-10 p-6 bg-gray-800 rounded-lg shadow-lg flex flex-col min-h-[calc(100vh-2.5rem)] mb-10">
+<div class="max-w-md mx-auto mt-10 p-6 rounded-lg shadow-lg flex flex-col min-h-[calc(100vh-2.5rem)] mb-10" style="background-color: var(--container-bg);">
     <img src="/matta-baby.png" alt="Solving the problems that matter most ™" class="mb-4 mx-auto rounded-lg" style="clip-path: inset(3px 0 0 0);"/>
-    <h1 class="text-2xl font-bold text-gray-100 mb-4 flex justify-between items-center">
+    <h1 class="text-2xl font-bold mb-4 flex justify-between items-center" style="color: var(--text-primary);">
         TODO List™
-        <span class="text-sm font-normal text-gray-400 min-w-[180px]">Current time: {now}s</span>
+        <span class="text-sm font-normal min-w-[180px]" style="color: var(--text-secondary);">Current time: {now}s</span>
     </h1>
-    <form onsubmit={addTodo} class="flex flex-wrap gap-2 mb-4">
+    <div class="flex justify-end mb-4">
+        <label class="flex items-center gap-1 text-sm" style="color: var(--text-secondary);">
+            <input type="checkbox" bind:checked={isFruityTheme} class="h-4 w-4" style="accent-color: var(--accent);"/>
+            Fruity Theme
+        </label>
+    </div>
+    <form on:submit={addTodo} class="flex flex-wrap gap-2 mb-4">
         <div class="flex flex-1 gap-2 min-w-0">
             <input type="text" bind:value={newTodo} placeholder="Add task (with deadline)"
-                   class="flex-1 p-2 border border-gray-600 bg-gray-700 text-gray-100 rounded focus:outline-none focus:ring-2 focus:ring-gray-400"/>
+                   class="flex-1 p-2 border rounded focus:outline-none focus:ring-2" style="border-color: var(--border); background-color: var(--item-bg); color: var(--text-primary); --tw-ring-color: var(--accent);"/>
             <input
                     type="number"
                     bind:value={newDeadlineInput}
                     placeholder="Deadline (seconds)"
-                    class="w-24 p-2 border border-gray-600 bg-gray-700 text-gray-100 rounded focus:outline-none focus:ring-2 focus:ring-gray-400"
+                    class="w-24 p-2 border rounded focus:outline-none focus:ring-2" style="border-color: var(--border); background-color: var(--item-bg); color: var(--text-primary); --tw-ring-color: var(--accent);"
                     step="10"
-                    onfocus={onFocus}
-                    onblur={onBlur}
+                    on:focus={onFocus}
+                    on:blur={onBlur}
             />
         </div>
         <div class="flex md:w-auto w-full md:justify-start justify-end">
             <button type="submit"
-                    class="{newTodo.trim() ? 'bg-gray-600 hover:bg-gray-500' : 'bg-gray-700 hover:bg-gray-600'} px-4 py-2 text-gray-100 rounded"
+                    class="{newTodo.trim() ? 'hover:bg-[var(--button-bg-hover)]' : 'hover:bg-[var(--button-bg)]'} px-4 py-2 rounded"
+                    style="background-color: {newTodo.trim() ? 'var(--button-bg)' : 'var(--button-bg-disabled)'}; color: var(--text-primary);"
                     disabled={!newTodo.trim()}>Add
             </button>
         </div>
     </form>
     {#snippet TodoItem(todo: Todo)}
-        <li class="relative p-3 bg-gray-700 rounded-sm mb-2 shadow-sm list-none">
-            <button class="absolute top-1 right-2 text-gray-400 hover:text-gray-300 text-lg font-bold leading-none"
-                    onclick={() => removeTodo(todo.id)}>×
+        <li class="relative p-3 rounded-sm mb-2 shadow-sm list-none" style="background-color: var(--item-bg);">
+            <button class="absolute top-1 right-2 text-lg font-bold leading-none"
+                    style="color: var(--text-secondary);"
+                    on:mouseover={(e) => e.currentTarget.style.color = 'var(--text-primary)'}
+                    on:mouseout={(e) => e.currentTarget.style.color = 'var(--text-secondary)'}
+                    on:click={() => removeTodo(todo.id)}>×
             </button>
             <div class="flex flex-col gap-1">
-                <span class="text-gray-100 font-medium">{todo.text}</span>
-                <label class="flex items-center gap-1 text-sm text-gray-400">
+                <span class="font-medium" style="color: var(--text-primary);">{todo.text}</span>
+                <label class="flex items-center gap-1 text-sm" style="color: var(--text-secondary);">
                     <input
                             type="checkbox"
                             checked={todo.matters}
-                            class="h-4 w-4 accent-gray-400"
+                            class="h-4 w-4"
+                            style="accent-color: var(--accent);"
                             disabled={(!!todo.completed) || !!todo.missedDeadline}
-                            onchange={(e) => {
+                            on:change={(e) => {
                         todo.matters = e.target.checked;
                         todos = [...todos];
                       }}
                     />
                     Matters
                 </label>
-                <div class="flex gap-4 text-sm text-gray-400">
+                <div class="flex gap-4 text-sm" style="color: var(--text-secondary);">
                     <span>Expiry: {todo.deadline} sec</span>
                     {#if todo.completed}
                     <span>
@@ -137,13 +160,14 @@
                 </div>
             </div>
             <div class="absolute bottom-3 right-3 {todo.completed ? 'hidden sm:block' : 'block'}">
-                <label class="flex items-center gap-1 text-sm text-gray-400">
+                <label class="flex items-center gap-1 text-sm" style="color: var(--text-secondary);">
                     <input
                             type="checkbox"
                             checked={!!todo.completed}
-                            class="h-4 w-4 accent-gray-400"
+                            class="h-4 w-4"
+                            style="accent-color: var(--accent);"
                             disabled={todo.missedDeadline}
-                            onchange={() => {
+                            on:change={() => {
                         todo.markDone(now);
                         todos = [...todos];
                       }}
@@ -155,7 +179,7 @@
     {/snippet}
 
     <div class="flex-1 flex flex-col">
-        <h2 class="text-lg font-semibold text-gray-300 mb-2">Matters</h2>
+        <h2 class="text-lg font-semibold mb-2" style="color: var(--text-primary);">Matters</h2>
         {#each mattersTodos as todo (todo.id)}
             <div>
                 {@render TodoItem(todo)}
@@ -164,7 +188,7 @@
 
         <div class="flex-1"></div>
 
-        <h2 class="text-lg font-semibold text-gray-300 mb-2">Success!</h2>
+        <h2 class="text-lg font-semibold mb-2" style="color: var(--text-primary);">Success!</h2>
         {#each successTodos as todo (todo.id)}
             <div>
                 {@render TodoItem(todo)}
@@ -173,7 +197,7 @@
 
         <div class="flex-1"></div>
 
-        <h2 class="text-lg font-semibold text-gray-300 mb-2">Trash heap of history</h2>
+        <h2 class="text-lg font-semibold mb-2" style="color: var(--text-primary);">Trash heap of history</h2>
         {#each trashTodos as todo (todo.id)}
             <div>
                 {@render TodoItem(todo)}
