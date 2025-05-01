@@ -94,7 +94,7 @@
 </style>
 
 <div class="max-w-md mx-auto mt-10 p-6 rounded-lg shadow-lg flex flex-col min-h-[calc(100vh-2.5rem)] mb-10" style="background-color: var(--container-bg);">
-    <img src="/matta-baby.png" alt="Solving the problems that matter most ™" class="mb-4 mx-auto rounded-lg" style="clip-path: inset(3px 0 0 0);"/>
+    <img src="/matta-baby.png" alt="Solving the problems that matter most ™" class="mb-4 mx-auto rounded-lg"/>
     <h1 class="text-2xl font-bold mb-4 flex justify-between items-center" style="color: var(--text-primary);">
         TODO List™
         <span class="text-sm font-normal min-w-[180px]" style="color: var(--text-secondary);">Current time: {now}s</span>
