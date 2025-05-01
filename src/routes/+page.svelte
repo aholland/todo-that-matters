@@ -2,6 +2,7 @@
   import {secondsSinceEpoch} from '$lib/stores/clock';
   import {get} from 'svelte/store';
   import {Todo} from '$lib/todo';
+  import {onMount} from 'svelte';
   import '../lib/styles/themes.css';
 
   let todos = $state<Todo[]>([]);
@@ -14,6 +15,15 @@
   let now = $derived($secondsSinceEpoch - startSeconds);
   let defaultDeadline = $derived((Math.round((now-3) / 10) * 10)+10);
   let newDeadline = $derived(isManualDeadline ? newDeadlineInput : defaultDeadline);
+
+  /* Ensure theme is applied on initial load */
+  onMount(() => {
+    if (isFruityTheme) {
+      document.documentElement.classList.add('fruity-theme');
+    } else {
+      document.documentElement.classList.remove('fruity-theme');
+    }
+  });
 
   /* Update html class when theme changes */
   $effect(() => {
