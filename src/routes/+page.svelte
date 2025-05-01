@@ -136,7 +136,7 @@
                     {/if}
                 </div>
             </div>
-            <div class="absolute bottom-3 right-3">
+            <div class="absolute bottom-3 right-3 {todo.completed ? 'hidden sm:block' : 'block'}">
                 <label class="flex items-center gap-1 text-sm text-gray-400">
                     <input
                             type="checkbox"
