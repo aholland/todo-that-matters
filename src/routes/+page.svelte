@@ -83,7 +83,10 @@
   let successTodos = $derived(todos.filter(todo => todo.completed));
   let trashTodos = $derived(todos.filter(todo => (!todo.matters || todo.missedDeadline) && !todo.completed));
 </script>
-
+<svelte:head>
+    <link rel="preload" href="/matta-baby.png" as="image" />
+    <link rel="preload" href="/fruity-baby.jpg" as="image" />
+</svelte:head>
 <style>
     :global(html), :global(body) {
         background-color: var(--background);
